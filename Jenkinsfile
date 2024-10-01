@@ -1,38 +1,42 @@
-pipeline {
+pipeline{
     agent any
-
-    stages {
-        stage('Build Project') {
-            steps {
-                git url: 'https://github.com/kolleykalyani/SABankingproject/', branch: 'master'
-                sh 'mvn clean package'
+    stages{
+        stage('checkout the code from github'){
+            steps{
+                 git url: 'https://github.com/kolleykalyani/Banking-java-project/'
+                 echo 'github url checkout'
             }
         }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    sh 'docker build -t kalyanikolley/staragileprojectfinance:v6 .'
-                    sh 'docker images'
-                }
+        stage('codecompile with akshat'){
+            steps{
+                echo 'starting compiling'
+                sh 'mvn compile'
             }
         }
-
-        stage('Docker Login') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-pwd', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-                        sh "echo $PASS | docker login -u $USER --password-stdin"
-                        sh 'docker push kalyanikolley/staragileprojectfinance:v6'
-                    }
-                }
+        stage('codetesting with akshat'){
+            steps{
+                sh 'mvn test'
             }
         }
-
-        stage('Deploy') {
-            steps {
-                sh 'sudo docker run -itd --name container2 -p 8099:8081 kalyanikolley/staragileprojectfinance:v6'
+        stage('qa with akshat'){
+            steps{
+                sh 'mvn checkstyle:checkstyle'
             }
         }
+        stage('package with akshat'){
+            steps{
+                sh 'mvn package'
+            }
+        }
+        stage('run dockerfile'){
+          steps{
+               sh 'docker build -t myimg .'
+           }
+         }
+        stage('port expose'){
+            steps{
+                sh 'docker run -dt -p 8091:8091 --name c000 myimg'
+            }
+        }   
     }
 }
