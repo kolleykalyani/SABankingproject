@@ -31,7 +31,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'sudo docker run -itd --name My-container -p 8091:8081 kalyanikolley/staragileprojectfinance:v2'
+                sh 'sudo docker run -itd --name firstcontainer -p 8092:8081 kalyanikolley/staragileprojectfinance:v2'
             }
         }
     }
