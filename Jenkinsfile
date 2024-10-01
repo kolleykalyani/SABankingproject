@@ -12,7 +12,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t kalyanikolley/staragileprojectfinance:v1 .'
+                    sh 'docker build -t kalyanikolley/staragileprojectfinance:v2 .'
                     sh 'docker images'
                 }
             }
@@ -31,7 +31,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'sudo docker run -itd --name My-container -p 8091:8081 kalyanikolley/staragileprojectfinance:v1'
+                sh 'sudo docker run -itd --name My-container -p 8091:8081 kalyanikolley/staragileprojectfinance:v2'
             }
         }
     }
