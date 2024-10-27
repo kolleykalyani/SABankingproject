@@ -30,7 +30,7 @@ pipeline {
         }
         stage('run ansible') {
             steps {
-                sh 'ansible-playbook -i ansible-playbook.yml'
+                sh 'ansible-playbook ansible-playbook.yml'
             }
         }
         stage('run dockerfile'){
