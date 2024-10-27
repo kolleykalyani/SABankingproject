@@ -1,42 +1,50 @@
-pipeline{
+pipeline {
     agent any
-    stages{
-        stage('checkout the code from github'){
-            steps{
-                 git url: 'https://github.com/kolleykalyani/Banking-java-project/'
-                 echo 'github url checkout'
+    stages {
+        stage('checkout the code from github') {
+            steps {
+                git url: 'https://github.com/kolleykalyani/Banking-java-project/'
+                echo 'github url checkout'
             }
         }
-        stage('codecompile with kalyani'){
-            steps{
+        stage('codecompile with kalyani') {
+            steps {
                 echo 'starting compiling'
                 sh 'mvn compile'
             }
         }
-        stage('codetesting with kalyani'){
-            steps{
+        stage('codetesting with kalyani') {
+            steps {
                 sh 'mvn test'
             }
         }
-        stage('qa with kalyani'){
-            steps{
+        stage('qa with kalyani') {
+            steps {
                 sh 'mvn checkstyle:checkstyle'
             }
         }
-        stage('package with kalyani'){
-            steps{
+        stage('package with kalyani') {
+            steps {
                 sh 'mvn package'
             }
         }
-        stage('run dockerfile'){
-          steps{
-               sh 'docker build -t myimg .'
-           }
-         }
-        stage('port expose'){
-            steps{
+        stage('run dockerfile') {
+            steps {
+                sh 'docker build -t myimg .'
+            }
+        }
+        stage('port expose') {
+            steps {
                 sh 'docker run -dt -p 8091:8091 --name c000 myimg'
             }
-        }   
+        }
+        stage('deploy with ansible') {
+            steps {
+                echo 'Starting Ansible deployment'
+                sh '''
+                ansible-playbook -i <inventory_file> <playbook.yml>
+                '''
+            }
+        }
     }
 }
