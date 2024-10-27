@@ -28,6 +28,12 @@ pipeline {
                 sh 'mvn package'
             }
         }
+        stage('deploy with ansible') {
+            steps {
+                sh 'ansible-playbook ansible-playbook.yml'
+            }
+        }
+        
         stage('run dockerfile') {
             steps {
                 sh 'docker build -t myimg .'
@@ -36,14 +42,6 @@ pipeline {
         stage('port expose') {
             steps {
                 sh 'docker run -dt -p 8091:8091 --name c000 myimg'
-            }
-        }
-        stage('deploy with ansible') {
-            steps {
-                echo 'Starting Ansible deployment'
-                sh '''
-                ansible-playbook -i <inventory_file> <playbook.yml>
-                '''
             }
         }
     }
